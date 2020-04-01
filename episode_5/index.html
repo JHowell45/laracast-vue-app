@@ -5,9 +5,33 @@
     <title></title>
   </head>
 
+  <style>
+    .colour-red {
+      color: red;
+    }
+    .colour-blue {
+      color: blue;
+    }
+    .is-loading {
+      background: red;
+    }
+  </style>
+
   <body>
     <div id="root">
-      <button v-bind:title="title">hover over me!</button>
+      <button @click="method" :title="title">Hover Over Me!</button>
+
+      <h1 :class="className">Hello World!</h1>
+
+      <button @click="toggle" :class="{ 'is-loading': isLoading }">
+        Toggle Background!
+      </button>
+
+      <br />
+
+      <button @click="toggleDisable" :disabled="disabled">
+        Click To Disable!
+      </button>
     </div>
     <script src="https://unpkg.com/vue@2.1.3/dist/vue.js"></script>
 
@@ -15,7 +39,19 @@
       var app = new Vue({
         el: "#root",
         data: {
-          title: "title for the button"
+          title: "title for the button",
+          className: "colour-red",
+          isLoading: false,
+          disabled: false
+        },
+        methods: {
+          method() {},
+          toggle() {
+            this.isLoading = !this.isLoading;
+          },
+          toggleDisable() {
+            this.disabled = !this.disabled;
+          }
         }
       });
     </script>
