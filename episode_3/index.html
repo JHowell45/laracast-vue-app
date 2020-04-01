@@ -24,13 +24,15 @@
         el: "#root",
         data: {
           names: ["test1", "test2", "test3"]
-        }
-      });
+        },
 
-      document.querySelector("#button").addEventListener("click", () => {
-        let name = document.querySelector("#newName");
-        app.names.push(name.value);
-        name.value = "";
+        mounted() {
+          document.querySelector("#button").addEventListener("click", () => {
+            let name = document.querySelector("#newName");
+            app.names.push(name.value);
+            name.value = "";
+          });
+        }
       });
     </script>
   </body>
