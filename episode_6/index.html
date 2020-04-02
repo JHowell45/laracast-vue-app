@@ -31,13 +31,16 @@
       <ul>
         <li v-for="task in incompletedTasks">
           {{ task.desc }}
-          <button @click="completeTask(task)">Completed</button>
+          <button @click="toggleCompleted(task)">Completed</button>
         </li>
       </ul>
       <br />
       <h1>Completed Tasks</h1>
       <ul>
-        <li v-for="task in tasks" v-if="task.completed" v-text="task.desc"></li>
+        <li v-for="task in tasks" v-if="task.completed">
+          {{ task.desc }}
+          <button @click="toggleCompleted(task)">Unfinished</button>
+        </li>
       </ul>
     </div>
     <script src="https://unpkg.com/vue@2.1.3/dist/vue.js"></script>
@@ -84,8 +87,8 @@
         },
 
         methods: {
-          completeTask(task) {
-            task.completed = true;
+          toggleCompleted(task) {
+            task.completed = !task.completed;
           }
         }
       });
