@@ -6,7 +6,7 @@ Vue.component("message", {
     <article class="message">
         <div class="message-header">
           {{ title }}
-          <button class="delete" aria-label="delete" @click="hideModal></button>
+          <button class="delete" aria-label="delete" @click="hideModal"></button>
         </div>
         <div class="message-body">
           
@@ -18,7 +18,9 @@ Vue.component("message", {
   `,
 
   methods: {
-    hideModal() {}
+    hideModal() {
+      $(".message").hide;
+    }
   }
 });
 
