@@ -7,7 +7,7 @@ Vue.component("modal", {
       <div class="modal-content">
 
         <div class="box">
-          <p>This is some text</p>
+          <slot></slot>
         </div>
 
       </div>
