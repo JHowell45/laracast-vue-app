@@ -6,13 +6,88 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <h1 v-text="new Date()"></h1>
+      <br />
+      <h1>
+        Just the message data: "{{ message }}"
+      </h1>
+      <br />
+      <h1>
+        Value computed within the tag: {{ message.split("").reverse().join("")
+        }}
+      </h1>
+      <br />
+      <h1>
+        This is the computed property: {{ reversedMessage }}
+      </h1>
+      <br />
+      <h1>All Tasks</h1>
+      <ul>
+        <li v-for="task in tasks" v-text="task.desc"></li>
+      </ul>
+      <br />
+      <h1>Incomplete Tasks</h1>
+      <ul>
+        <li v-for="task in incompletedTasks">
+          {{ task.desc }}
+          <button @click="completeTask(task)">Completed</button>
+        </li>
+      </ul>
+      <br />
+      <h1>Completed Tasks</h1>
+      <ul>
+        <li v-for="task in tasks" v-if="task.completed" v-text="task.desc"></li>
+      </ul>
+    </div>
     <script src="https://unpkg.com/vue@2.1.3/dist/vue.js"></script>
 
     <script>
       var app = new Vue({
         el: "#root",
-        data: {}
+        data: {
+          message: "hello World",
+          tasks: [
+            {
+              desc: "Go to the store",
+              completed: true
+            },
+            {
+              desc: "Finish lesson",
+              completed: false
+            },
+            {
+              desc: "Clear inbox",
+              completed: false
+            },
+            {
+              desc: "Make dinner",
+              completed: false
+            },
+            {
+              desc: "Clean room",
+              completed: true
+            }
+          ]
+        },
+
+        computed: {
+          reversedMessage() {
+            return this.message
+              .split("")
+              .reverse()
+              .join("");
+          },
+          incompletedTasks() {
+            return this.tasks.filter(task => !task.completed);
+          }
+        },
+
+        methods: {
+          completeTask(task) {
+            task.completed = true;
+          }
+        }
       });
     </script>
   </body>
