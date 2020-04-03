@@ -1,39 +1,42 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <title></title>
-  </head>
 
-  <body>
-    <div id="root">
-      <ul>
-        <li v-for="name in names">{{name}}</li>
-      </ul>
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+</head>
 
-      <br />
-      <input id="name" type="text" v-model="newName" />
+<body>
+  <div id="root">
+    <ul>
+      <li v-for="name in names">{{name}}</li>
+    </ul>
 
-      <button @click="addName">Add Name</button>
-    </div>
+    <br />
+    <input id="name" type="text" v-model="newName" />
 
-    <script src="https://unpkg.com/vue@2.1.3/dist/vue.js"></script>
+    <button @click="addName">Add Name</button>
+  </div>
 
-    <script>
-      var app = new Vue({
-        el: "#root",
-        data: {
-          newName: "",
-          names: ["test1", "test2", "test3"]
-        },
+  <script src="https://unpkg.com/vue@2.1.3/dist/vue.js"></script>
 
-        methods: {
-          addName() {
-            this.names.push(this.newName);
-            this.newName = "";
-          }
+  <script>
+    var app = new Vue({
+      el: "#root",
+      data: {
+        newName: "",
+        names: ["test1", "test2", "test3"]
+      },
+
+      methods: {
+        addName() {
+          this.names.push(this.newName);
+          this.newName = "";
         }
-      });
-    </script>
-  </body>
+      }
+    });
+  </script>
+</body>
+
 </html>
