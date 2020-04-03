@@ -1,5 +1,13 @@
-new Vue({
-  el: "#root"
+Vue.component("coupon", {
+  template: `<input>`
 });
 
-Vue.component("coupon", {});
+new Vue({
+  el: "#root",
+
+  methods: {
+    onCouponApplied() {
+      alert("Coupon applied!");
+    }
+  }
+});
