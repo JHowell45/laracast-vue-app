@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -33,7 +35,9 @@ export default {
 
   methods: {
     onSubmit() {
-      alert("submitting!");
+      // alert("submitting!");
+
+      axios.post("/projects", this.$data);
     },
   },
 };
