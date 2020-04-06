@@ -2,7 +2,16 @@
   <form method="POST" action="/projects" @submit.prevent="onSubmit">
     <div class="control">
       <label for="name" class="label">Project Name: </label>
-      <input type="text" id="name" name="name" class="input" v-model="name" />
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="input"
+        v-model="name"
+        required
+      />
+
+      <span class="help is-danger" v-text="errors.get('name')"></span>
     </div>
 
     <div class="control">
@@ -13,6 +22,7 @@
         name="description"
         class="input"
         v-model="description"
+        required
       />
     </div>
 
@@ -30,6 +40,7 @@ export default {
     return {
       name: "",
       description: "",
+      errors: {},
     };
   },
 
@@ -37,7 +48,13 @@ export default {
     onSubmit() {
       // alert("submitting!");
 
-      axios.post("/projects", this.$data);
+      axios
+        .post("/projects", this.$data)
+        .then((response) => {
+          alert("success!");
+          return response;
+        })
+        .catch((error) => (this.errors = error.response.data));
     },
   },
 };
