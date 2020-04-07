@@ -3,7 +3,7 @@
     method="POST"
     action="/projects"
     @submit.prevent="onSubmit"
-    @keydown="errors.clear($event.target.name)"
+    @keydown="form.errors.clear($event.target.name)"
   >
     <div class="control">
       <label for="name" class="label">Project Name: </label>
@@ -12,14 +12,14 @@
         id="name"
         name="name"
         class="input"
-        v-model="name"
+        v-model="form.name"
         required
       />
 
       <span
         class="help is-danger"
-        v-if="errors.has('name')"
-        v-text="errors.get('name')"
+        v-if="form.errors.has('name')"
+        v-text="form.errors.get('name')"
       ></span>
     </div>
 
@@ -30,26 +30,27 @@
         id="description"
         name=""
         class="input"
-        v-model="description"
+        v-model="form.description"
         required
       />
     </div>
 
     <span
       class="help is-danger"
-      v-if="errors.has('description')"
-      v-text="errors.get('description')"
+      v-if="form.errors.has('description')"
+      v-text="form.errors.get('description')"
     ></span>
 
     <div class="control">
-      <button class="button is-primary" :disabled="errors.any()">Create</button>
+      <button class="button is-primary" :disabled="form.errors.any()">
+        Create
+      </button>
     </div>
   </form>
 </template>
 
 <script>
 import axios from "axios";
-// import "core-js/es6/object";
 
 class Errors {
   constructor() {
@@ -67,7 +68,11 @@ class Errors {
   }
 
   clear(field) {
-    delete this.errors[field];
+    if (field) {
+      delete this.errors[field];
+    } else {
+      this.errors = {};
+    }
   }
 
   has(field) {
@@ -79,12 +84,54 @@ class Errors {
   }
 }
 
+class Form {
+  constructor(data) {
+    this.originalData = data;
+
+    for (let field in data) {
+      this[field] = data[field];
+    }
+    this.errors = new Errors();
+  }
+
+  data() {
+    let data = Object.assign({}, this);
+    delete data.originalData;
+    delete data.errors;
+  }
+
+  reset() {
+    for (let field in this.originalData) {
+      this[field] = "";
+    }
+  }
+
+  submit(requestType, url) {
+    axios[requestType](url, this.$data)
+      .then(this.onSuccess.bind(this))
+      .catch(this.onFail.bind(this));
+  }
+
+  onSuccess(response) {
+    alert(response.data.message);
+
+    this.errors.clear();
+
+    this.reset();
+  }
+
+  onFail(error) {
+    this.form.errors.record(error.response.data);
+  }
+}
+
 export default {
   data() {
     return {
-      name: "",
-      description: "",
-      errors: new Errors()
+      form: new Form({
+        name: "",
+        description: ""
+      })
     };
   },
 
@@ -92,17 +139,19 @@ export default {
     onSubmit() {
       // alert("submitting!");
 
-      axios
-        .post("/projects", this.$data)
-        .then(this.onSuccess)
-        .catch(error => this.errors.record(error.response.data));
-    },
-    onSuccess(response) {
-      alert("success!");
-      this.name = "";
-      this.description = "";
-      return response;
+      // axios
+      //   .post("/projects", this.$data)
+      //   .then(this.onSuccess)
+      //   .catch(error => this.form.errors.record(error.response.data));
+
+      this.form.submit("post", "/projects");
     }
+    // onSuccess(response) {
+    //   alert("success!");
+    //   this.name = "";
+    //   this.description = "";
+    //   return response;
+    // }
   }
 };
 </script>
