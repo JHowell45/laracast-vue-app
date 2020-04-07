@@ -95,33 +95,46 @@ class Form {
   }
 
   data() {
-    let data = Object.assign({}, this);
-    delete data.originalData;
-    delete data.errors;
+    let data = {};
+    for (let property in this.originalData) {
+      data[property] = this[property];
+    }
+    // let data = Object.assign({}, this);
+    // delete data.originalData;
+    // delete data.errors;
   }
 
   reset() {
     for (let field in this.originalData) {
       this[field] = "";
     }
+    this.errors.clear();
   }
 
   submit(requestType, url) {
-    axios[requestType](url, this.$data)
-      .then(this.onSuccess.bind(this))
-      .catch(this.onFail.bind(this));
+    return new Promise((resolve, reject) => {
+      axios[requestType](url, this.$data)
+        .then((response) => {
+          this.onSuccess(response.data);
+
+          resolve(response.data);
+        })
+        .catch((error) => {
+          this.onFail(error.response.data);
+
+          reject(error.response.data);
+        });
+    });
   }
 
-  onSuccess(response) {
-    alert(response.data.message);
-
-    this.errors.clear();
+  onSuccess(data) {
+    alert(data.message);
 
     this.reset();
   }
 
-  onFail(error) {
-    this.form.errors.record(error.response.data);
+  onFail(errors) {
+    this.errors.record(errors);
   }
 }
 
@@ -130,8 +143,8 @@ export default {
     return {
       form: new Form({
         name: "",
-        description: ""
-      })
+        description: "",
+      }),
     };
   },
 
@@ -144,15 +157,18 @@ export default {
       //   .then(this.onSuccess)
       //   .catch(error => this.form.errors.record(error.response.data));
 
-      this.form.submit("post", "/projects");
-    }
-    // onSuccess(response) {
-    //   alert("success!");
-    //   this.name = "";
-    //   this.description = "";
-    //   return response;
-    // }
-  }
+      this.form
+        .submit("post", "/projects")
+        .then(() => alert("Handling it!"))
+        .catch((errors) => console.log(errors));
+    },
+    onSuccess(response) {
+      alert("success!");
+      this.name = "";
+      this.description = "";
+      return response;
+    },
+  },
 };
 </script>
 
